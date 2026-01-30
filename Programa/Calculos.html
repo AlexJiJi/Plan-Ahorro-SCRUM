@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan de ahorros</title>
+    <link rel="stylesheet" type="text/css" href="estilos.css">
+</head>
+
+<body>
+    <script>
+        const PARAMETROS = new URLSearchParams(window.location.search);
+        var edad = PARAMETROS.get("edad")
+        edad = +edad
+        if (edad < 18) {
+            alert("Necesitas tener mas de 18 años para usar este programa")
+            window.location.href = "Index.html";
+        }
+    </script>
+    <h1>PLAN DE AHORRO</h1>
+    <table align="center">
+        <tr>
+            <th colspan="2">Información del usuario</th>
+        </tr>
+        <tr>
+            <td>Nombre:</td>
+            <td id="nombre"></td>
+        </tr>
+        <tr>
+            <td>Correo electrónico:</td>
+            <td id="email"></td>
+        </tr>
+        <tr>
+            <td>Edad:</td>
+            <td id="edad"></td>
+        </tr>
+        <tr>
+            <th colspan="2">Objetivo</th>
+        </tr>
+        <tr>
+            <td id="objetivo"></td>
+            <td id="$objetivo">$</td>
+        </tr>
+        <tr>
+            <td>Plazo:</td>
+            <td id="plazo"></td>
+        </tr>
+        <tr>
+            <td><br></td>
+        </tr>
+        <tr>
+            <td>Ingresos mensuales:</td>
+            <td id="ingresos"></td>
+        </tr>
+        <tr>
+            <td> <br></td>
+        </tr>
+        <tr>
+            <td>Necesidades basicas:</td>
+            <td id="e1"></td>
+        </tr>
+        <tr>
+            <td>Ahorros Extras:</td>
+            <td id="e2"></td>
+        </tr>
+        <tr>
+            <td>Subscripciones:</td>
+            <td id="e3"></td>
+        </tr>
+        <tr>
+            <td>Entretenimiento:</td>
+            <td id="e4"></td>
+        </tr>
+        <tr>
+            <td>Gastos Extras:</td>
+            <td id="e5"></td>
+        </tr>
+        <tr>
+            <td><strong>Egresos totales:</strong></td>
+            <td id="et"></td>
+        </tr>
+        <tr>
+            <td></td>
+        </tr>
+    </table>
+    <table align="center" id="tabla" class="tabla">
+        <tr>
+            <th>
+                <h2>Opciones de ahorro</h2>
+            </th>
+        </tr>
+    </table>
+    <hr>
+    <script>
+        const NOMBRE = (PARAMETROS.get("nombre") + " " + PARAMETROS.get("apellidos"));
+        const EMAIL = PARAMETROS.get("email");
+        const OBJETIVO = PARAMETROS.get("nomobjetivo");
+        var target = PARAMETROS.get("cantobjetivo")
+        var plazo = PARAMETROS.get("plazo")
+        var ingresos = PARAMETROS.get("ingresos");
+        var egreso1 = PARAMETROS.get("basicos");
+        var egreso2 = PARAMETROS.get("ahorros");
+        var egreso3 = PARAMETROS.get("subscripciones");
+        var egreso4 = PARAMETROS.get("diversion");
+        var egreso5 = PARAMETROS.get("extras");
+        var importancia = PARAMETROS.get("importanciaextra");
+        //Mostramos los datos personales
+        document.getElementById("nombre").innerHTML = NOMBRE
+        document.getElementById("email").innerHTML = EMAIL
+        document.getElementById("edad").innerHTML = edad + " años"
+        document.getElementById("objetivo").innerHTML = OBJETIVO
+        document.getElementById("$objetivo").innerHTML = "$" + target
+        document.getElementById("plazo").innerHTML = plazo + " meses"
+        document.getElementById("ingresos").innerHTML = "$" + ingresos
+        document.getElementById("e1").innerHTML = "$" + egreso1
+        document.getElementById("e2").innerHTML = "$" + egreso2
+        document.getElementById("e3").innerHTML = "$" + egreso3
+        document.getElementById("e4").innerHTML = "$" + egreso4
+        document.getElementById("e5").innerHTML = "$" + egreso5
+        console.log(NOMBRE, EMAIL, edad, OBJETIVO, target, plazo, ingresos, egreso1, egreso2, egreso3, egreso4, egreso5, importancia)
+        //Convertimos a números 
+        target = +target
+        plazo = +plazo
+        ingresos = +ingresos
+        egreso1 = +egreso1
+        egreso2 = +egreso2
+        egreso3 = +egreso3
+        egreso4 = +egreso4
+        egreso5 = +egreso5
+        importancia = +importancia
+        var Egresos = egreso1 + egreso2 + egreso3 + egreso4 + egreso5 //egresos totales
+        document.getElementById("et").innerHTML = "<strong>$" + Egresos + "</strong>"
+        var balance = ingresos - Egresos
+        var AhorroPor15na = 0;
+        //Reporte en plazo
+        function HacerReporte1(AhorroPor15na, plazo, target) {
+            var tabla = document.getElementById("tabla")
+            var fila = tabla.insertRow(-1)
+            fila.insertCell(0).innerHTML = "Puede cumplir su objetivo en el plazo elegido ahorrando " + AhorroPor15na + " cada quincena por  " + plazo + " meses = " + (AhorroPor15na * 2 * plazo)
+        }
+        //Reporte fuera de plazo
+        function HacerReporte2(AhorroPor15na, plazo, target) {
+            var tabla = document.getElementById("tabla")
+            var fila = tabla.insertRow(-1)
+            fila.insertCell(0).innerHTML = "Puede cumplir su objetivo en un <strong>plazo diferente</strong> ahorrando " + AhorroPor15na + " cada quincena por  " + plazo + " meses = " + (AhorroPor15na * 2 * plazo)
+        }
+        //Reporte en plazo con recorte de egresos
+        function HacerReporte3(AhorroPor15na, plazo, target, mensaje) {
+            var tabla = document.getElementById("tabla")
+            var fila = tabla.insertRow(-1)
+            fila.insertCell(0).innerHTML = "<em><strong><br> Para cumplir su objetivo en el plazo seleccionado, debería de dejar de gastar en: </em></strong> <br><br> " + mensaje + " <br> Así ahorraría " + AhorroPor15na + " cada quincena por  " + plazo + " meses = " + (AhorroPor15na * 2 * plazo)
+        }
+        //comenzamos a validar en donde se encuentran los gastos del ususario
+        if (balance > 0) { //Si el balance es positivo
+            if ((balance * plazo) >= target) { //Si puede cumplir su objetivo en el plazo
+                AhorroPor15na = Math.ceil((target / plazo) / 2) //Divide el objetivo entre el plazo, eso da lo que ocupa ahorrar cada mes
+                HacerReporte1(AhorroPor15na, plazo, target);
+            } else {                           //Si no puede cumplir su objetivo en el plazo
+                // REPORTE CON PLAZO INFINITO
+                let nplazo = plazo;
+                nplazo = Math.ceil(target / balance) //El nuevo plazo será el objetivo entre el balance 
+                AhorroPor15na = Math.ceil((target / nplazo) / 2) //Divide el objetivo entre el nuevo plazo, eso da lo que ocupa ahorrar cada mes
+                HacerReporte2(AhorroPor15na, nplazo, target)
+
+                //Calcular que gastos puede dejar para cumplirlo en el plazo
+                var ntarget = target - (balance * plazo) //el nuevo objetivo que tiene se tiene que llegar con los ahorros
+                let aux = 0;
+                var gastos = []
+                var nomgastos = []
+                var gastosaquitar = []
+                //Se ordenan los egresos por nivel de importancia
+                switch (importancia) {
+                    case 5:
+                        gastos = [egreso1, egreso2, egreso3, egreso4, egreso5]
+                        nomgastos = ["necesidades basicas", "ahorros", "subscripciones", "entretenimiento", "extras"]
+                        break;
+                    case 4:
+                        gastos = [egreso1, egreso2, egreso3, egreso5, egreso4]
+                        nomgastos = ["necesidades basicas", "ahorros", "subscripciones", "extras", "entretenimiento"]
+                        break;
+                    case 3:
+                        gastos = [egreso1, egreso2, egreso5, egreso3, egreso4]
+                        nomgastos = ["necesidades basicas", "ahorros", "extras", "subscripciones", "entretenimiento"]
+                        break;
+                    case 2:
+                        gastos = [egreso1, egreso5, egreso2, egreso3, egreso4]
+                        nomgastos = ["necesidades basicas", "extras", "ahorros", "subscripciones", "entretenimiento"]
+                        break;
+                    case 1:
+                        gastos = [egreso5, egreso1, egreso2, egreso3, egreso4]
+                        nomgastos = ["extras", "necesidades basicas", "ahorros", "subscripciones", "entretenimiento"]
+                        break;
+                }
+                //Empezamos a sumar los egresos hasta encontrar cuales se deben de suspender
+                let mensaje = ""
+                if (gastos[4] * plazo >= ntarget) {
+                    AhorroPor15na = Math.ceil((target / plazo) / 2)
+                    mensaje = nomgastos[4] + " ( " + gastos[4] + ") <br>"
+                    console.log("Sólo gasto 4 = " + gastos[4])
+                    HacerReporte3(AhorroPor15na, plazo, target, mensaje)
+                } else {
+                    if ((gastos[4] + gastos[3]) * plazo >= ntarget) {
+                        AhorroPor15na = Math.ceil((target / plazo) / 2)
+                        mensaje = nomgastos[4] + " y " + nomgastos[3] + " ($" + (gastos[4] + gastos[3]) + ") <br>"
+                        console.log("gasto 4 y 3 = " + gastos[4] + " y " + gastos[3])
+                        HacerReporte3(AhorroPor15na, plazo, target, mensaje)
+                    } else {
+                        if ((gastos[4] + gastos[3] + gastos[2]) * plazo >= ntarget) {
+                            AhorroPor15na = Math.ceil((target / plazo) / 2)
+                            mensaje = nomgastos[4] + ", " + nomgastos[3] + " y " + nomgastos[2] + " ($" + (gastos[4] + gastos[3] + gastos[2]) + ") <br>"
+                            console.log("gasto 4, 3 y 2 = " + gastos[4] + " y " + gastos[3] + " y " + gastos[2])
+                            HacerReporte3(AhorroPor15na, plazo, target, mensaje)
+                        } else {
+                            if ((gastos[4] + gastos[3] + gastos[2] + gastos[1]) * plazo >= ntarget) {
+                                AhorroPor15na = Math.ceil((target / plazo) / 2)
+                                mensaje = nomgastos[4] + ", " + nomgastos[3] + ", " + nomgastos[2] + " y " + nomgastos[1] + " ($" + (gastos[4] + gastos[3] + gastos[2] + gastos[1]) + ") <br>"
+                                console.log("gasto 4, 3, 2 y 1 = " + gastos[4] + " y " + gastos[3] + " y " + gastos[2] + " y " + gastos[1])
+                                HacerReporte3(AhorroPor15na, plazo, target, mensaje)
+                            } else {
+                                if ((gastos[4] + gastos[3] + gastos[2] + gastos[1] + gastos[0]) * plazo >= ntarget) {
+                                    AhorroPor15na = Math.ceil((target / plazo) / 2)
+                                    mensaje = "Todo, lo cual no es realista ahorrar todos sus ingresos ($" + (gastos[4] + gastos[3] + gastos[2] + gastos[1] + gastos[0]) + ") <br>"
+                                    console.log("gasto 4, 3, 2, 1 y 0 = " + gastos[4] + " y " + gastos[3] + " y " + gastos[2] + " y " + gastos[1] + " y " + gastos[0])
+                                    HacerReporte3(AhorroPor15na, plazo, target, mensaje)
+                                } else {
+                                    alert("No es posible cumplir el objetivo en el plazo seleccionado aunque ahorres todo lo que ganas")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {           //Si el balance es negativo
+            alert("Su balance es 0 o negativo, primero arregle sus finanzas")
+            window.location.href = "Index.html"
+        }
+
+    </script>
+</body>
+<footer>
+    <p>Gracias por utilizar esta aplicación</p>
+    <p>
+        Alejandro Jiménez <br>
+        Ingeniería en Computación <br>
+        Ingeniería de Software <br>
+    </p>
+</footer>
+
+</html>
